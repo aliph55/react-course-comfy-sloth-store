@@ -1,45 +1,36 @@
-import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useProductsContext } from '../context/products_context';
-import { single_product_url as url } from '../utils/constants';
-import { formatPrice } from '../utils/helpers';
-import {
-  Loading,
-  Error,
-  ProductImages,
-  AddToCart,
-  Stars,
-  PageHero,
-} from '../components';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
+import { useProductsContext } from '../context/products_context'
+import { single_product_url as url } from '../utils/constants'
+import { formatPrice } from '../utils/helpers'
+import { Loading, Error, ProductImages, AddToCart, Stars } from '../components'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 const SingleProductPage = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { id } = useParams()
+  const history = useHistory()
   const {
     single_product_loading: loading,
     single_product_error: error,
     single_product: product,
     fetchSingleProduct,
-  } = useProductsContext();
+  } = useProductsContext()
 
   useEffect(() => {
-    fetchSingleProduct(`${url}${id}`);
-    // eslint-disable-next-line
-  }, [id]);
+    fetchSingleProduct(`${url}${id}`)
+  }, [id])
   useEffect(() => {
     if (error) {
       setTimeout(() => {
-        navigate('/');
-      }, 3000);
+        history.push('/')
+      }, 3000)
     }
-    // eslint-disable-next-line
-  }, [error]);
+  }, [error])
   if (loading) {
-    return <Loading />;
+    return <Loading />
   }
   if (error) {
-    return <Error />;
+    return <Error />
   }
 
   const {
@@ -51,12 +42,12 @@ const SingleProductPage = () => {
     reviews,
     id: sku,
     company,
-    images,
-  } = product;
+    image: images,
+    colors,
+  } = product
   return (
-    <Wrapper>
-      <PageHero title={name} product />
-      <div className='section section-center page'>
+    <Wrapper className='page'>
+      <div className='section-center'>
         <Link to='/products' className='btn'>
           back to products
         </Link>
@@ -80,13 +71,13 @@ const SingleProductPage = () => {
               {company}
             </p>
             <hr />
-            {stock > 0 && <AddToCart product={product} />}
+            {stock > 0 && <AddToCart colors={colors} id={sku} stock={stock} />}
           </section>
         </div>
       </div>
     </Wrapper>
-  );
-};
+  )
+}
 
 const Wrapper = styled.main`
   .product-center {
@@ -120,6 +111,6 @@ const Wrapper = styled.main`
       font-size: 1.25rem;
     }
   }
-`;
+`
 
-export default SingleProductPage;
+export default SingleProductPage

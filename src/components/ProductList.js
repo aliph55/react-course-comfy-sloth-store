@@ -1,22 +1,38 @@
 import React from 'react'
+import styled from 'styled-components'
 import { useFilterContext } from '../context/filter_context'
-import GridView from './GridView'
-import ListView from './ListView'
+import Product from './Product'
 const ProductList = () => {
-  const { filtered_products: products, grid_view } = useFilterContext()
-
-  if (products.length < 1) {
-    return (
-      <h5 style={{ textTransform: 'none' }}>
-        Sorry, no products matched your search.
-      </h5>
-    )
-  }
-
-  if (grid_view === false) {
-    return <ListView products={products} />
-  }
-  return <GridView products={products} />
+  const { filtered_products: products } = useFilterContext()
+  return (
+    <Wrapper>
+      <div className='products-container'>
+        {products.map((product) => {
+          return <Product key={product.id} {...product} />
+        })}
+      </div>
+    </Wrapper>
+  )
 }
 
+const Wrapper = styled.section`
+  img {
+    height: 175px;
+  }
+
+  .products-container {
+    display: grid;
+    gap: 2rem 1.5rem;
+  }
+  @media (min-width: 992px) {
+    .products-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1170px) {
+    .products-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+`
 export default ProductList

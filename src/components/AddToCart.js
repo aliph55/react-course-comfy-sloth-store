@@ -1,13 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import { FaCheck } from 'react-icons/fa'
-import { useCartContext } from '../context/cart_context'
-import AmountButtons from './AmountButtons'
-const AddToCart = ({ product }) => {
-  // add to cart
-  const { addToCart } = useCartContext()
-  const { id, stock, colors } = product
+import { FaCheck, FaPlus, FaMinus } from 'react-icons/fa'
+
+const AddToCart = ({ colors, stock }) => {
   const [mainColor, setMainColor] = useState(colors[0])
   const [amount, setAmount] = useState(1)
 
@@ -51,19 +46,16 @@ const AddToCart = ({ product }) => {
         </div>
       </div>
       <div className='btn-container'>
-        <AmountButtons
-          increase={increase}
-          decrease={decrease}
-          amount={amount}
-        />
-
-        <Link
-          to='/cart'
-          className='btn'
-          onClick={() => addToCart(id, mainColor, amount, product)}
-        >
-          add to cart
-        </Link>
+        <div className='amount-btns'>
+          <button type='button' onClick={decrease}>
+            <FaMinus />
+          </button>
+          <h2>{amount}</h2>
+          <button type='button' onClick={increase}>
+            <FaPlus />
+          </button>
+        </div>
+        <button className='btn'>add to cart</button>
       </div>
     </Wrapper>
   )
@@ -106,11 +98,31 @@ const Wrapper = styled.section`
   }
   .btn-container {
     margin-top: 2rem;
+    display: flex;
+    align-items: center;
   }
-
-  .btn {
-    margin-top: 1rem;
-    width: 140px;
+  .amount-btns {
+    display: grid;
+    width: 100px;
+    text-align: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    align-items: center;
+    margin-right: 1rem;
+    button {
+      background: transparent;
+      border-color: transparent;
+      cursor: pointer;
+      padding: 1rem 0;
+      width: 1rem;
+      height: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  h2 {
+    margin-bottom: 0;
   }
 `
 export default AddToCart
